@@ -25,6 +25,7 @@ namespace Geek.Server.Core.Utils
                 act?.Invoke();
             };
 
+            // 监听 TERM 信号
             exitSignalReg = PosixSignalRegistration.Create(PosixSignal.SIGTERM, c =>
             {
                 LOGGER.Info("PosixSignalRegistration SIGTERM....");
@@ -38,7 +39,7 @@ namespace Geek.Server.Core.Utils
 
             TaskScheduler.UnobservedTaskException += (s, e) => { handleFetalException("TaskScheduler.UnobservedTaskException", e.Exception); };
 
-            //ctrl+c
+            // 监听 ctrl+c
             Console.CancelKeyPress += (s, e) => { callBack(); };
         }
 
