@@ -18,10 +18,13 @@ namespace Geek.Server.App
         {
             try
             {
+                // 安装退出处理
                 AppExitHandler.Init(HandleExit);
 
+                // 游戏主循环
                 GameLoopTask = AppStartUp.Enter();
                 await GameLoopTask;
+
                 if (ShutDownTask != null)
                     await ShutDownTask;
             }

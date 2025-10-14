@@ -19,12 +19,19 @@ namespace Geek.Server.App.Common
                 var flag = Start();
                 if (!flag) return; //启动服务器失败
 
-                Log.Info($"launch embedded db...");
+                // actor直接限制，防止死锁
                 ActorLimit.Init(ActorLimit.RuleType.None);
+
+                // 初始化链接Mongodb
+                Log.Info($"launch embedded db...");
                 GameDB.Init();
                 GameDB.Open();
+
+                // 注册组件
                 Log.Info($"regist comps...");
                 await CompRegister.Init();
+
+                // 加载热更模块
                 Log.Info($"load hotfix module");
                 await HotfixMgr.LoadHotfixModule();
 
@@ -50,6 +57,7 @@ namespace Geek.Server.App.Common
         {
             try
             {
+                // 加载配置
                 Settings.Load<AppSetting>("Configs/app_config.json", ServerType.Game);
                 Console.WriteLine("init NLog config...");
                 LogManager.Setup().SetupExtensions(s => s.RegisterConditionMethod("logState", (e) => Settings.IsDebug ? "debug" : "release"));
