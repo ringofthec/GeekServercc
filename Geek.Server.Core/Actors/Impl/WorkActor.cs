@@ -50,7 +50,7 @@ namespace Geek.Server.Core.Actors.Impl
             return (needEnqueue, chainId);
         }
 
-        #region 勿调用(仅供代码生成器调用)
+      #region 勿调用(仅供代码生成器调用)
         public Task Enqueue(Action work, long callChainId, bool discard = false, int timeOut = TIME_OUT)
         {
             if (!discard && Settings.IsDebug && !ActorLimit.AllowCall(Id))
@@ -108,6 +108,7 @@ namespace Geek.Server.Core.Actors.Impl
         #endregion
 
         #region 供框架底层调用(逻辑开发人员应尽量避免调用)
+        // 发送一个消息，入队，不等待
         public void Tell(Action work, int timeout = Actor.TIME_OUT)
         {
             var at = new ActionWrapper(work)
@@ -116,9 +117,12 @@ namespace Geek.Server.Core.Actors.Impl
                 TimeOut = timeout,
                 CallChainId = NextChainId(),
             };
+            
+            // SendAsync 返回一个task<bool> ， await的话就可以获取到是否成功放入队列中
             _ = ActionBlock.SendAsync(at);
         }
 
+        // 同上
         public void Tell(Func<Task> work, int timeout = Actor.TIME_OUT)
         {
             var wrapper = new ActionAsyncWrapper(work)

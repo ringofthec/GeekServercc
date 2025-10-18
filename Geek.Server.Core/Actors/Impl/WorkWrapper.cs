@@ -19,6 +19,7 @@
         }
     }
 
+    // 无返回值 wrapper 
     public class ActionWrapper : WorkWrapper
     {
         static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
@@ -29,6 +30,9 @@
         public ActionWrapper(Action work)
         {
             Work = work;
+            
+            // 如果要判断这个 work 是否真的执行完成，就是看这个 Tcs
+            // 这个是Action 的，是没有返回值的，所以这里 Tcs 是一个bool，设置为true就表示这个action已经执行过了
             Tcs = new TaskCompletionSource<bool>();
         }
 
@@ -45,7 +49,9 @@
             }
             finally
             {
-                ResetContext();
+                ResetContext(); 
+                
+                // 不管action是否报错，都是执行了的，所以这里设置为true
                 Tcs.TrySetResult(true);
             }
             return Task.CompletedTask;
@@ -63,6 +69,7 @@
         }
     }
 
+    // 返回值为T的 wrapper
     public class FuncWrapper<T> : WorkWrapper
     {
         static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
@@ -73,6 +80,8 @@
         public FuncWrapper(Func<T> work)
         {
             Work = work;
+            
+            // 生成一个和返回值T类型一样的 Tcs
             Tcs = new TaskCompletionSource<T>();
         }
 
@@ -91,6 +100,8 @@
             finally
             {
                 ResetContext();
+                
+                // 执行完成，需要设置结果，类型是T
                 Tcs.TrySetResult(ret);
             }
             return Task.CompletedTask;
@@ -108,6 +119,7 @@
         }
     }
 
+    // 异步执行的没有返回值的 wrapper
     public class ActionAsyncWrapper : WorkWrapper
     {
         static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
@@ -126,6 +138,8 @@
             try
             {
                 SetContext();
+                
+                // 这里是一个异步方法，所以await
                 await Work();
             }
             catch (Exception e)
@@ -151,6 +165,7 @@
         }
     }
 
+    // 异步执行的返回值为T的 wrapper
     public class FuncAsyncWrapper<T> : WorkWrapper
     {
         static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
