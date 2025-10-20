@@ -108,7 +108,7 @@ namespace Geek.Server.Core.Actors.Impl
         #endregion
 
         #region 供框架底层调用(逻辑开发人员应尽量避免调用)
-        // 发送一个消息，入队，不等待
+        // 发送一个消息，入队，不等待，也没有返回值
         public void Tell(Action work, int timeout = Actor.TIME_OUT)
         {
             var at = new ActionWrapper(work)
@@ -122,7 +122,7 @@ namespace Geek.Server.Core.Actors.Impl
             _ = ActionBlock.SendAsync(at);
         }
 
-        // 同上
+        // 同上，入队，不等待，也没有返回值，只是在底层调用时，需要await调用
         public void Tell(Func<Task> work, int timeout = Actor.TIME_OUT)
         {
             var wrapper = new ActionAsyncWrapper(work)
