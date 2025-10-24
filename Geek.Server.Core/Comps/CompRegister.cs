@@ -152,13 +152,29 @@ namespace Geek.Server.Core.Comps
             }
         }
 
+        /*
+            创建一个新的组件Comp
+            注意，Comp是为一个actor创建的，前提是这个Comp是属于actor的
+            这个属于的关系，是在 CompAttribute 中指定的
+            比如：
+                [Comp(ActorType.Role)]
+                public class BagComp : StateComp<BagState>
+                {
+                }
+            创建 BagComp的时候，就会检查该Comp是否属于这个actor，如果不属于，则抛出异常
+            
+            注意 Comp 是在 App 工程中的，是非热更新部分
+        */
         internal static BaseComp NewComp(Actor actor, Type compType)
         {
+            // 检查compType是否属于actor
             if (!ActorCompDic.TryGetValue(actor.Type, out var compTypes) || !compTypes.Contains(compType))
             {
                 throw new Exception($"获取不属于此actor：{actor.Type}的comp:{compType.FullName}");
             }
+            
             var comp = (BaseComp)Activator.CreateInstance(compType);
+            // 绑定actor的归属
             comp.Actor = actor;
             return comp;
         }

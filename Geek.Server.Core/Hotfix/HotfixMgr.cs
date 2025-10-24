@@ -12,6 +12,7 @@ namespace Geek.Server.Core.Hotfix
 {
     public class HotfixMgr
     {
+        // 如果是true，说明正在加载热更新模块，这个时候要避免使用
         internal static volatile bool DoingHotfix = false;
 
         private static volatile HotfixModule module = null;

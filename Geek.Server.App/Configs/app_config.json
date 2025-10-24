@@ -9,6 +9,6 @@
   "GrpcPort": 30000,
   "WebSocketUrl": "http://*:443", 
   "SDKType": 0, 
-  "MongoUrl": "mongodb://127.0.0.1:27017/?authSource=admin",
+  "MongoUrl": "mongodb://admin:admin@127.0.0.1:27017/?authSource=admin",
   "MongoDBName": "geek_server"
 }

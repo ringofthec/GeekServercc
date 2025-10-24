@@ -11,6 +11,7 @@ namespace Geek.Server.Core.Actors
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
+        // 管理 actor 下属的全部 组件 Comp
         private readonly ConcurrentDictionary<Type, BaseComp> compDic = new();
 
         public long Id { get; init; }
@@ -36,9 +37,21 @@ namespace Geek.Server.Core.Actors
             return (T)await GetCompAgent(typeof(T));
         }
 
+        /*
+            CompAgent 
+            CompAgent 是在Hotfix模块中的，是可以热更的
+            
+            比如：
+                BagCompAgent : StateCompAgent<BagComp, BagState>
+                可以看到，CompAgent 和 Comp 如何进行绑定
+         */
         public async Task<ICompAgent> GetCompAgent(Type agentType)
         {
+            // 获取 CompAgent 的继承参数的第一个类型，也就是 Comp
+            // 比如 BagCompAgent 的话，这里就获取到了 BagComp
             var compType = agentType.BaseType.GetGenericArguments()[0];
+            
+            // 从 actor 获取或者创建这个 Comp
             var comp = compDic.GetOrAdd(compType, k => CompRegister.NewComp(this, k));
             var agent = comp.GetAgent(agentType);
             if (!comp.IsActive)
