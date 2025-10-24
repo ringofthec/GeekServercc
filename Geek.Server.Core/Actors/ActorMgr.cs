@@ -12,6 +12,7 @@ namespace Geek.Server.Core.Actors
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
+        // 所有 actor 的map
         private static readonly ConcurrentDictionary<long, Actor> actorDic = new();
 
         public static async Task<T> GetCompAgent<T>(long actorId) where T : ICompAgent
@@ -82,6 +83,8 @@ namespace Geek.Server.Core.Actors
             return Task.WhenAll(tasks);
         }
 
+        // 监控 actor 的活跃时间，如果一个 actor 长时间没有活跃，那么就尝试回收这个 actor
+        // 15 分钟内没有活跃的 actor 就尝试回收， 在 CheckIdle 函数中实现
         private static readonly ConcurrentDictionary<long, DateTime> activeTimeDic = new();
 
         private static readonly List<WorkerActor> workerActors = new();
@@ -106,6 +109,7 @@ namespace Geek.Server.Core.Actors
         {
             foreach (var actor in actorDic.Values)
             {
+                // 注意，必须是 AutoRecycle 为 true 的 actor 才被回收，就是自动管理生命周期的 actor 才会检查回收
                 if (actor.AutoRecycle)
                 {
                     actor.Tell(async () =>
