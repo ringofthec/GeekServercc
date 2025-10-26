@@ -338,6 +338,7 @@ namespace Geek.Server.Core.Actors
             }
         }
 
+        // 热更新完成后，把所有 actor 的 全部 Comp 中的 CompAgent 清理掉
         public static void ClearAgent()
         {
             foreach (var actor in actorDic.Values)

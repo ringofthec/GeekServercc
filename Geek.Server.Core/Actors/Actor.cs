@@ -164,6 +164,7 @@ namespace Geek.Server.Core.Actors
             return $"{base.ToString()}_{Type}_{Id}";
         }
 
+        // 热更新完成后，actor 里面所有的 Comp 组件清除对应的 CompAgent
         public void ClearAgent()
         {
             foreach (var comp in compDic.Values)

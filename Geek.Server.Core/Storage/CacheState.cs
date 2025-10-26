@@ -14,7 +14,7 @@ namespace Geek.Server.Core.Storage
 
         public long Id { get; set; }
 
-        public override string ToString()
+        public override string ToString()  
         {
             return $"{base.ToString()}[Id={Id}]";
         }

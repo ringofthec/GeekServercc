@@ -20,13 +20,17 @@ namespace Server.Logic.Common
 
         public ServerType BridgeType => ServerType.Game;
 
+        // 热更新成功后，调用这个
         public async Task<bool> OnLoadSuccess(bool reload)
         {
+            // 如果是重载
             if (reload)
             {
+                // 清理全部 actor 的 Comp 的 CompAgent，重新绑定
                 ActorMgr.ClearAgent();
                 return true;
             }
+            
             PolymorphicTypeMapper.Register(this.GetType().Assembly);
             HotfixMgr.SetMsgGetter(MsgFactory.GetType);
 

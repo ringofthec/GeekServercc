@@ -45,6 +45,7 @@ namespace Geek.Server.Core.Comps
         public static readonly StatisticsTool statisticsTool = new();
     }
 
+    // 有状态的 Comp 基类，继承自 BaseComp，传入一个继承 IState 接口的类型
     public abstract class StateComp<TState> : BaseComp, IState where TState : CacheState, new()
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
