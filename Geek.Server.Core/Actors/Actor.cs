@@ -54,11 +54,16 @@ namespace Geek.Server.Core.Actors
             // 从 actor 获取或者创建这个 Comp
             var comp = compDic.GetOrAdd(compType, k => CompRegister.NewComp(this, k));
             var agent = comp.GetAgent(agentType);
+            
+            // 如果这个 Comp 没有激活，则激活
             if (!comp.IsActive)
             {
                 await SendAsyncWithoutCheck(async () =>
                 {
+                    // comp 组件激活是异步操作
                     await comp.Active();
+                    
+                    // agent 激活是同步操作
                     agent.Active();
                 });
             }

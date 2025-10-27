@@ -59,8 +59,11 @@ namespace Geek.Server.Core.Hotfix
             }
 
             module = newModule;
+            
+            // 这个很重要，加载热更新模块后，会调用一次 OnLoadSuccess
             if (module.HotfixBridge != null)
                 return await module.HotfixBridge.OnLoadSuccess(reload);
+            
             return true;
         }
 

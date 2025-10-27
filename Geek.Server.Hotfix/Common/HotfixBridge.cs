@@ -18,6 +18,11 @@ namespace Server.Logic.Common
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
+        /*
+            程序启动的时候，设置了 ServerType = ServerType.Game
+            这个热更新程序集，存在继承自 IHotfixBridge 的这个类
+            那么在加载热更新dll成功后，就会调用 OnLoadSuccess 函数
+        */
         public ServerType BridgeType => ServerType.Game;
 
         // 热更新成功后，调用这个

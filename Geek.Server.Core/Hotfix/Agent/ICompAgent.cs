@@ -4,6 +4,7 @@ using Geek.Server.Core.Comps;
 
 namespace Geek.Server.Core.Hotfix.Agent
 {
+    // Comp Agent 的接口，这个都实现在可热更新模块中
     public interface ICompAgent
     {
         long ActorId { get; }

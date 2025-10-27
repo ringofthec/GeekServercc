@@ -80,6 +80,7 @@ namespace Geek.Server.Core.Comps
             return Task.CompletedTask;
         }
 
+        // 激活全局组件
         public static async Task ActiveGlobalComps()
         {
             try
@@ -101,12 +102,14 @@ namespace Geek.Server.Core.Comps
                         //    await ActorMgr.GetCompAgent(agentType, actorType);
                         //}
                     }
+                    
                     if (actorType > ActorType.Separator)
                     {
                         Log.Info($"激活全局Actor: {actorType}");
                         await ActorMgr.GetOrNew(IdGenerator.GetActorID(actorType));
                     }
                 }
+                
                 Log.Info($"激活全局组件并检测组件是否都包含Agent实现完成");
             }
             catch (Exception)

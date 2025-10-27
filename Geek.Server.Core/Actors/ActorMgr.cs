@@ -45,8 +45,11 @@ namespace Geek.Server.Core.Actors
             return GetCompAgent<T>(IdGenerator.GetActorID(actorType));
         }
 
+        // 获取 actor，如果 actor 不存在，那么就创建一个 actor
+        // actorId的组成本身就是 actorType * 1000 + serverId
         internal static async Task<Actor> GetOrNew(long actorId)
         {
+            // 从 actorId 反解出 actorType
             var actorType = IdGenerator.GetActorType(actorId);
             if (actorType == ActorType.Role)
             {

@@ -57,8 +57,10 @@ namespace Geek.Server.App.Common
         {
             try
             {
+                // 注意这里， ServerType 为 Game
                 // 加载配置
                 Settings.Load<AppSetting>("Configs/app_config.json", ServerType.Game);
+                
                 Console.WriteLine("init NLog config...");
                 LogManager.Setup().SetupExtensions(s => s.RegisterConditionMethod("logState", (e) => Settings.IsDebug ? "debug" : "release"));
                 LogManager.Configuration = new XmlLoggingConfiguration("Configs/app_log.config");

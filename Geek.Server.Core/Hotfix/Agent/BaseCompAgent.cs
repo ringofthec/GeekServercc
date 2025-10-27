@@ -7,10 +7,14 @@ using Geek.Server.Core.Utils;
 
 namespace Geek.Server.Core.Hotfix.Agent
 {
+    // 把 Comp 和 CompAgent 组合在一起的位置
     public abstract class BaseCompAgent<TComp> : ICompAgent where TComp : BaseComp
     {
+        // Agent 所属的 Comp 组件
         public BaseComp Owner { get; set; }
         public TComp Comp => (TComp)Owner;
+        
+        // Agent 所属的 Actor
         public Actor Actor => Owner.Actor;
         public long ActorId => Actor.Id;
         public ActorType OwnerType => Actor.Type;
@@ -22,6 +26,7 @@ namespace Geek.Server.Core.Hotfix.Agent
 
         }
 
+        // 自动回收，也就是不活跃的Actor超时后会被回收掉
         protected void SetAutoRecycle(bool autoRecycle)
         {
             Actor.SetAutoRecycle(autoRecycle);
